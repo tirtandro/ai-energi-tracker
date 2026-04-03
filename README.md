@@ -1,91 +1,48 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/mlco2/ecologits/main/docs/assets/logo_dark.png">
-    <img alt="EcoLogits" src="https://raw.githubusercontent.com/mlco2/ecologits/main/docs/assets/logo_light.png">
-  </picture>
-</p>
+# 🌱 AI Energy Tracker | SMAN 2 Wates
 
-🌱 **EcoLogits** tracks the energy consumption and environmental impacts of using generative AI models through APIs.
+**AI Energy Tracker** adalah sebuah dashboard interaktif berbasis Streamlit yang dirancang untuk melacak dan memvisualisasikan konsumsi energi, emisi karbon, serta penggunaan air secara *real-time* dari interaksi dengan model Generative AI (Google Gemini). 
 
-[![PyPI version](https://img.shields.io/pypi/v/ecologits?color=00bf63)](https://pypi.org/project/ecologits/)
-[![PyPI downloads](https://static.pepy.tech/badge/ecologits/month)](https://pepy.tech/projects/ecologits)
-[![Python version](https://img.shields.io/pypi/pyversions/ecologits)](https://pypi.org/project/ecologits/)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1VxrpJ5xuWZKQLsSN12kdqUqkppHRct3G?usp=sharing)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15601289.svg)](https://doi.org/10.5281/zenodo.15601289)
-[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?&logo=discord&logoColor=white)](https://discord.gg/CAecQ2zM4n)
+Proyek ini merupakan bagian dari **Inovasi Konservasi Energi SMAN 2 Wates**.
 
-Read the full **documentation on [ecologits.ai](https://ecologits.ai/)**.
+👨‍💻 **Pengembang:** Tirtandro Meda
 
-EcoLogits is part of the **[CodeCarbon](https://codecarbon.io/) non-profit, chat with us on [Discord](https://discord.gg/CAecQ2zM4n)**.
+---
 
+## ✨ Fitur Utama
 
-## ⚙️ Installation
+- **Pemantauan Real-Time:** Menghitung estimasi penggunaan energi (kWh), jejak karbon (kgCO2eq), dan konsumsi air (m³) dari setiap prompt yang dikirim ke AI.
+- **Visualisasi Dinamis:** Menyediakan grafik berbasis Plotly untuk membandingkan penggunaan token dengan konsumsi energi.
+- **Smart Model Fallback:** Otomatis mencoba `gemini-3-flash-preview` dan mundur ke `gemini-2.0-flash` jika kuota limit (HTTP 429) tercapai.
+- **Kustomisasi Zona Energi:** Memungkinkan pemilihan zona bauran listrik (seperti Indonesia, US, Eropa) untuk penghitungan emisi yang lebih akurat.
 
-```shell
-pip install ecologits
-```
+## 🚀 Instalasi dan Menjalankan Lokal
 
-For integration with a specific provider, use `pip install ecologits[openai]`. We are currently supporting the following providers: `anthropic`, `cohere`, `google-genai`, `huggingface-hub`, `mistralai` and `openai`. See the full [list of providers](https://ecologits.ai/latest/tutorial/providers/).
+1. **Clone repository ini**
+   ```shell
+   git clone <url-repo-anda>
+   cd "AI Energi Tracker"
+   ```
 
+2. **Install dependensi**
+   Pastikan Anda sudah menginstal Python 3.10+. Jalankan perintah:
+   ```shell
+   pip install -r requirements.txt
+   ```
+   *(Dependensi utama: `streamlit`, `google-genai`, `pandas`, `plotly`, dan `ecologits`)*
 
-## 🚀 Usage
+3. **Jalankan Aplikasi**
+   ```shell
+   streamlit run dashboard.py
+   ```
+   Aplikasi akan otomatis terbuka di browser pada `http://localhost:8501`.
 
-```python
-from ecologits import EcoLogits
-from openai import OpenAI
+## 🌐 Deployment (Railway)
 
-# Initialize EcoLogits
-EcoLogits.init(providers=["openai"])
+Repository ini telah dikonfigurasi untuk siap di-deploy ke **Railway** atau platform PaaS lainnya.
+- File `requirements.txt` dan `Procfile` sudah disiapkan.
+- Hubungkan repository ini ke Railway, atur Environment Variable `GEMINI_API_KEY`, dan aplikasi Anda akan otomatis ter-deploy.
 
-client = OpenAI(api_key="<OPENAI_API_KEY>")
+---
 
-response = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[
-        {"role": "user", "content": "Tell me a funny joke!"}
-    ]
-)
-
-# Get estimated environmental impacts of the inference
-print(f"Energy consumption: {response.impacts.energy.value.mean} kWh")
-print(f"GHG emissions: {response.impacts.gwp.value.mean} kgCO2eq")
-```
-
-See package documentation on [EcoLogits](https://ecologits.ai/)
-
-
-## 💚 Sponsors
-
-<a href="https://resilio-solutions.com/" target="_blank">
-<img src="https://raw.githubusercontent.com/mlco2/ecologits/main/docs/assets/sponsors/resilio.png" alt="Resilio" height="100" width="250">
-</a>
-
-<a href="https://www.terra-cognita.ai/" target="_blank">
-<img src="https://raw.githubusercontent.com/mlco2/ecologits/main/docs/assets/sponsors/terra_cognita.png" alt="Terra Cognita" height="100" width="250">
-</a>
-
-<a href="https://sopht.com/" target="_blank">
-<img src="https://raw.githubusercontent.com/mlco2/ecologits/main/docs/assets/sponsors/sopht.png" alt="Sopht" height="100" width="250">
-</a>
-
-<a href="https://www.avanade.com/" target="_blank">
-<img src="https://raw.githubusercontent.com/mlco2/ecologits/main/docs/assets/sponsors/avanade.png" alt="Avanade" height="100" width="250">
-</a>
-
-<a href="https://www.theodo.com/" target="_blank">
-<img src="https://raw.githubusercontent.com/mlco2/ecologits/main/docs/assets/sponsors/theodo.png" alt="Theodo" height="100" width="250">
-</a>
-
-<a href="https://www.culture.gouv.fr/" target="_blank">
-<img src="https://raw.githubusercontent.com/mlco2/ecologits/main/docs/assets/sponsors/ministere_culture.png" alt="Ministère de la Culture" height="100" width="132">
-</a>
-
-
-## 💪 Contributing
-
-To get started with setting up a development environment and making a contribution to EcoLogits, see [Contributing to EcoLogits](https://ecologits.ai/latest/contributing/).
-
-
-## ⚖️ License
-
-This project is licensed under the terms of the [Mozilla Public License Version 2.0 (MPL-2.0)](https://www.mozilla.org/en-US/MPL/2.0/).
+### *Powered by*
+Proyek ini ditenagai oleh **[EcoLogits](https://ecologits.ai/)**, sebuah pustaka open-source untuk melacak dampak lingkungan dari penggunaan API model AI Generatif.
