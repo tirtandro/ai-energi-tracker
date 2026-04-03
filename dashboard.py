@@ -97,10 +97,11 @@ if prompt:
                 used_model = model
                 break
             except Exception as e:
-                if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-                    st.toast(f"Kuota habis untuk {model}. Mencoba cadangan...", icon="⚠️")
+                # Catch both Quota Exhausted (429) & Model Overloaded (503)
+                if any(err in str(e) for err in ["429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE"]):
+                    st.toast(f"{model} sedang sibuk. Beralih ke model cadangan...", icon="⚠️")
                     continue
-                st.error(f"Kesalahan pada {model}: {e}")
+                st.error(f"Kesalahan tidak terduga pada {model}: {e}")
                 break
     
     if response:
