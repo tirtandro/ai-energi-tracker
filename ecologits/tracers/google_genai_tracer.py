@@ -65,7 +65,9 @@ def google_genai_content_wrapper(
                 endpoint=f"/v1beta/models/{model_name}:generateContent"
             )
 
-        return GenerateContentResponse(**response.model_dump(), impacts=impacts)
+        dump = response.model_dump()
+        dump.pop("impacts", None)
+        return GenerateContentResponse(**dump, impacts=impacts)
     else:
         return response
 
@@ -92,7 +94,7 @@ def google_genai_content_stream_wrapper(
     stream = wrapped(*args, **kwargs)
     for chunk in stream:
         if chunk.candidates[0].finish_reason is None:
-            yield GenerateContentResponse(**chunk.model_dump(), impacts=None)
+            dump = chunk.model_dump(); dump.pop("impacts", None); yield GenerateContentResponse(**dump, impacts=None)
 
         else:
             request_latency = time.perf_counter() - timer_start
@@ -121,9 +123,9 @@ def google_genai_content_stream_wrapper(
                         endpoint=f"/v1beta/models/{model_name}:generateContent"
                     )
 
-                yield GenerateContentResponse(**chunk.model_dump(), impacts=impacts)
+                dump = chunk.model_dump(); dump.pop("impacts", None); yield GenerateContentResponse(**dump, impacts=impacts)
             else:
-                yield GenerateContentResponse(**chunk.model_dump(), impacts=None)
+                dump = chunk.model_dump(); dump.pop("impacts", None); yield GenerateContentResponse(**dump, impacts=None)
 
 
 async def google_genai_async_content_wrapper(
@@ -172,7 +174,7 @@ async def google_genai_async_content_wrapper(
                 endpoint=f"/v1beta/models/{model_name}:generateContent"
             )
 
-        return GenerateContentResponse(**response.model_dump(), impacts=impacts)
+        dump = response.model_dump(); dump.pop("impacts", None); return GenerateContentResponse(**dump, impacts=impacts)
     else:
         return response
 
@@ -184,7 +186,7 @@ async def _generator(
 ) -> AsyncIterator[GenerateContentResponse]:
     async for chunk in stream:
         if chunk.candidates[0].finish_reason is None:
-            yield GenerateContentResponse(**chunk.model_dump(), impacts=None)
+            dump = chunk.model_dump(); dump.pop("impacts", None); yield GenerateContentResponse(**dump, impacts=None)
 
         else:
             request_latency = time.perf_counter() - timer_start
@@ -212,9 +214,9 @@ async def _generator(
                         endpoint=f"/v1beta/models/{model_name}:generateContent"
                     )
 
-                yield GenerateContentResponse(**chunk.model_dump(), impacts=impacts)
+                dump = chunk.model_dump(); dump.pop("impacts", None); yield GenerateContentResponse(**dump, impacts=impacts)
             else:
-                yield GenerateContentResponse(**chunk.model_dump(), impacts=None)
+                dump = chunk.model_dump(); dump.pop("impacts", None); yield GenerateContentResponse(**dump, impacts=None)
 
 
 async def google_genai_async_content_stream_wrapper(
@@ -274,3 +276,4 @@ class GoogleGenaiInstrumentor:
             wrap_function_wrapper(
                 wrapper["module"], wrapper["name"], wrapper["wrapper"]
             )
+
